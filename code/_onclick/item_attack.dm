@@ -42,6 +42,14 @@
 
 /obj/attackby(obj/item/I, mob/living/user, params)
 	return ..() || ((obj_flags & CAN_BE_HIT) && I.attack_obj(src, user))
+	if(user.a_intent == INTENT_HARM && user.m_intent == MOVE_INTENT_WALK)//if you swing carefully without blocking, you click easier
+		for(var/mob/living/L in get_turf(src))
+			if(L.stat)
+				continue
+			if(user == L)
+				continue
+			L.attackby(I, user)
+			return FALSE
 
 /mob/living/attackby(obj/item/I, mob/living/user, params)
 	if(..())
